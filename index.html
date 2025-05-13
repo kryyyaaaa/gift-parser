@@ -515,8 +515,8 @@
             if (emptyState) emptyState.remove();
             
             const giftNumbers = new Set();
-            while (giftNumbers.size < 100) {
-                giftNumbers.add(Math.floor(Math.random() * 100000) + 1);
+            while (giftNumbers.size < 1000) {
+                giftNumbers.add(Math.floor(Math.random() * 300000) + 1);
             }
             
             // Process gifts in batches to avoid browser freezing
