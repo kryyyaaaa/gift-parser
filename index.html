@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Telegram Gift Parser PRO</title>
+    <title>Telegram Gift Parser</title>
     <style>
         :root {
             --primary: #0088cc;
@@ -332,6 +332,11 @@
             color: #cccccc;
         }
 
+        .export-btn {
+            margin-top: 20px;
+            width: 100%;
+        }
+
         @media (max-width: 768px) {
             .control-panel {
                 flex-direction: column;
@@ -418,6 +423,10 @@
                 <p>Select a gift model and click "Parse Gift" to start</p>
             </div>
         </div>
+
+        <button id="exportBtn" class="btn export-btn" onclick="exportGifts()" disabled>
+            <span>Export Valid Gifts (user link - gift link)</span>
+        </button>
     </div>
 
     <script>
@@ -452,6 +461,7 @@
         let validGifts = 0;
         let invalidGifts = 0;
         let isParsing = false;
+        let validGiftLinks = []; // Array to store valid gift links and owner links
 
         // Update stats display
         function updateStats() {
@@ -461,6 +471,9 @@
             
             const successRate = totalParsed > 0 ? Math.round(validGifts / totalParsed * 100) : 0;
             document.getElementById('successRate').textContent = `${successRate}%`;
+            
+            // Enable/disable export button based on valid gifts
+            document.getElementById('exportBtn').disabled = validGifts === 0;
         }
 
         // Parse a single gift
@@ -575,6 +588,11 @@
                     
                     if (isValid) {
                         validGifts++;
+                        // Store the gift and owner links
+                        validGiftLinks.push({
+                            userLink: ownerTag.href,
+                            giftLink: url
+                        });
                         displayGiftCard(htmlDoc, url, giftNumber, giftModel);
                     } else {
                         invalidGifts++;
@@ -687,6 +705,31 @@
                 giftList.innerHTML = '';
             }
             giftList.insertBefore(giftCard, giftList.firstChild);
+        }
+
+        // Export gifts to text file
+        function exportGifts() {
+            if (validGiftLinks.length === 0) {
+                alert('No valid gifts to export');
+                return;
+            }
+            
+            // Create text content
+            let textContent = '';
+            validGiftLinks.forEach(item => {
+                textContent += `${item.userLink} - ${item.giftLink}\n`;
+            });
+            
+            // Create download link
+            const blob = new Blob([textContent], { type: 'text/plain' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `telegram_gifts_${new Date().toISOString().slice(0, 10)}.txt`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
         }
     </script>
 </body>
