@@ -369,8 +369,8 @@
             </div>
             
             <div class="form-group">
-                <label for="giftNumber">Gift Number (1-100000)</label>
-                <input type="number" id="giftNumber" min="1" max="100000" placeholder="e.g. 382">
+                <label for="giftNumber">Gift Number (1-300000)</label>
+                <input type="number" id="giftNumber" min="1" max="300000" placeholder="e.g. 382">
             </div>
             
             <button id="parseBtn" class="btn" onclick="parseGift()">
@@ -382,7 +382,7 @@
             </button>
             
             <button id="batchBtn" class="btn btn-secondary" onclick="parseBatchGifts()">
-                <span>Parse 100 Random</span>
+                <span>Parse 1000 Random</span>
             </button>
         </div>
 
@@ -489,7 +489,7 @@
                 return;
             }
             
-            const randomNum = Math.floor(Math.random() * 100000) + 1;
+            const randomNum = Math.floor(Math.random() * 300000) + 1;
             document.getElementById('giftNumber').value = randomNum;
             await parseSingleGift(giftModel, randomNum);
         }
